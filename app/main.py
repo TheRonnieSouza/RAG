@@ -1,9 +1,9 @@
+'''
 import getpass
 import os
 from langchain.chat_models import init_chat_model
 from langchain_openai import OpenAIEmbeddings
 from langchain_core.vectorstores import InMemoryVectorStore
-
 import bs4
 from langchain import hub
 from langchain_community.document_loaders import WebBaseLoader
@@ -11,7 +11,23 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langgraph.graph import START, StateGraph
 from typing_extensions import List, TypedDict
+'''
+from fastapi import FastAPI
 
+app = FastAPI()
+
+@app.get("/")
+async def read_root():
+    return {"Hello": "World"}
+
+@app.post("/ingest")
+async def ingest_document():
+    
+    return {"Ingest": "Ingested"}
+
+
+
+'''
 os.environ["LANGSMITH_TRACING"] = "true"
 os.environ["LANGSMITH_API_KEY"] = getpass.getpass()
 
@@ -25,8 +41,6 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 vector_store = InMemoryVectorStore(embeddings)
 
 
-
-# Load and chunk contents of the blog
 loader = WebBaseLoader(
     web_paths=("https://www.factored.ai/",),
     bs_kwargs=dict(
@@ -46,8 +60,7 @@ all_splits = text_splitter.split_documents(docs)
 print(f"Split blog post into {len(all_splits)} sub-documents.")
 
 # Index chunks
-document_ids = vector_store.add_documents(documents=all_splits)
-
+document_ids = "ere"#vector_store.add_documents(documents=all_splits)
 
 print(document_ids[:3])
 
@@ -63,8 +76,6 @@ example_messages = prompt.invoke(
 
 assert len(example_messages) == 1 
 print (example_messages[0].content)
-
-
 
 # Define state for application
 class State(TypedDict):
@@ -90,8 +101,8 @@ def generate(state: State):
 graph_builder = StateGraph(State).add_sequence([retrieve, generate])
 graph_builder.add_edge(START, "retrieve")
 graph = graph_builder.compile()
+'''
 
 
-
-response = graph.invoke({"question": "What is factored?"})
-print(response["answer"])
+#response = graph.invoke({"question": "What is factored?"})
+#print(response["answer"])

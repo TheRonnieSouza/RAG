@@ -13,3 +13,6 @@ pip install -qU langchain-openai
 
 vector dataBase in memory 
 pip install -qU langchain-core
+
+
+pip install FastAPI
