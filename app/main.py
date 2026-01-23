@@ -12,7 +12,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langgraph.graph import START, StateGraph
 from typing_extensions import List, TypedDict
 '''
-from fastapi import FastAPI
+from fastapi import FastAPI, File , UploadFile 
+from typing import Annotated
 
 app = FastAPI()
 
@@ -25,6 +26,13 @@ async def ingest_document():
     
     return {"Ingest": "Ingested"}
 
+@app.post("/files")
+async def create_file(file: Annotated[bytes, File()]):
+    return {"file_size": len(file)}
+
+@app.post("/uploadfile/")
+async def create_upload(file: Annotated[UploadFile, File()]):
+    return {"filename": file.filename}
 
 
 '''
