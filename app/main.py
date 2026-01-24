@@ -1,14 +1,14 @@
-'''
-from langchain.chat_models import init_chat_model
-from langchain_openai import OpenAIEmbeddings
-from langchain_core.vectorstores import InMemoryVectorStore
-import bs4
-from langchain import hub
-from langchain_community.document_loaders import WebBaseLoader
-from langchain_core.documents import Document
+
+#from langchain.chat_models import init_chat_model
+#from langchain_openai import OpenAIEmbeddings
+#from langchain_core.vectorstores import InMemoryVectorStore
+#import bs4
+#from langchain import hub
+#from langchain_community.document_loaders import WebBaseLoader
+#from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from typing_extensions import List, TypedDict
-'''
+#from typing_extensions import List, TypedDict
+
 from fastapi import FastAPI, File , UploadFile 
 from typing import Annotated
 import pymupdf
@@ -33,22 +33,25 @@ async def create_file(file: Annotated[bytes, File()]):
 async def create_upload(file: Annotated[UploadFile, File()]):
     content = await file.read()
     
-    #deletar doc antigo se existir
-    
-    
     doc = pymupdf.open(stream=content, filetype="pdf")
     out = open("output.txt", "wb")
+    
+    all_text = ""
     for page in doc:
-        text = page.get_text().encode("utf8")
-        out.write(text)
+        text = page.get_text()
+        all_text += text
+        out.write(text.encode("utf8"))
         out.write(bytes((12,)))
-        
-        
-        
     
     out.close()
     
-    return {"filename": file.filename}
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=10)    
+    all_chunkin = text_splitter.split_text(text=all_text)
+    print(all_chunkin)
+    
+    
+    
+    return {"filename": file.filename, "chunks": len(all_chunkin)}
 
 
 '''

@@ -15,3 +15,5 @@ app.main:app --reload;
 
 #leitor de pdf
 pip install --upgrade pymupdf
+pip install -U langchain
+pip install -U langchain-text-splitters
