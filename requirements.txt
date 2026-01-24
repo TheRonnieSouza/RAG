@@ -12,3 +12,6 @@ fastapi uvicorn python-multipart;
 
 # 2. Rodar a API
 app.main:app --reload;
+
+#leitor de pdf
+pip install --upgrade pymupdf
