@@ -48,17 +48,18 @@ async def create_upload(file: Annotated[UploadFile, File()]):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=140,separators=['.'])    
     all_chunkin = text_splitter.split_text(text=all_text)
     
+    all_chunking_saved = "" 
     chunck = open("chunk.txt", "wb")
     for chunkin in all_chunkin:
-        string =  (chunkin + "\n\n").encode("utf8")
+        all_chunking_saved += (chunkin + "\n\n")
+        string =  (chunkin + "\n\n").encode("utf8")        
         chunck.write(string)
          
     print(all_chunkin)
-    
     chunck.close()
     
     
-    return {"filename": file.filename, "chunks": len(all_chunkin)}
+    return {"filename": file.filename, "chunks": all_chunking_saved}
 
 
 '''
