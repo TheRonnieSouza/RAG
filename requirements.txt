@@ -1,0 +1,19 @@
+
+# pip install langgraph                                   
+#pip install langchain    
+#pip install --quiet --upgrade langchain-text-splitters langchain-community langgraph
+#pip install -qU "langchain[openai]"
+#pip install -qU langchain-openai
+#pip install -qU langchain-core
+#fastapi==0.128.0;
+python-multipart;
+# 1. Instalar dependências
+fastapi uvicorn python-multipart;
+
+# 2. Rodar a API
+app.main:app --reload;
+
+#leitor de pdf
+pip install --upgrade pymupdf
+pip install -U langchain
+pip install -U langchain-text-splitters
