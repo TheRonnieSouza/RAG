@@ -7,7 +7,10 @@
 #from langchain_community.document_loaders import WebBaseLoader
 #from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 #from typing_extensions import List, TypedDict
+import os
+from dotenv import load_dotenv
 
 from fastapi import FastAPI, File , UploadFile 
 from typing import Annotated
@@ -16,6 +19,10 @@ import pymupdf
 
 app = FastAPI()
 
+load_dotenv()
+embedding_api_key = os.getenv('GOOGLE_MODEL_EMBEDDING_API_KEY')
+embedding_model_name = os.getenv('GOOGLE_MODEL_EMBEDDING_NAME')
+
 @app.get("/")
 async def read_root():
     return {"Hello": "World"}
@@ -23,7 +30,12 @@ async def read_root():
 @app.post("/ingest")
 async def ingest_document():
     
-    return {"Ingest": "Ingested"}
+    embeddings = GoogleGenerativeAIEmbeddings(model=embedding_model_name, api_key=embedding_api_key)
+    vector = embeddings.embed_query("hello, world!")
+    vector[:5]
+    print(f'vectores: {vector[0]}')
+    
+    return {vector[0],vector[1],vector[2], vector[3] }
 
 @app.post("/files")
 async def create_file(file: Annotated[bytes, File()]):
