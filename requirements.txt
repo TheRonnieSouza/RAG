@@ -21,6 +21,10 @@ pip install -U langchain-text-splitters
 
 pip install python-dotenv
 
-pip install pydantic-settings
+
 
 pip install -qU  langchain-google-genai
+
+#pydantic 
+pip install pydantic
+pip install pydantic-settings

@@ -9,19 +9,16 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 #from typing_extensions import List, TypedDict
-import os
-from dotenv import load_dotenv
 
 from fastapi import FastAPI, File , UploadFile 
 from typing import Annotated
 import pymupdf
+from app.config.settings import Settings
 
 
 app = FastAPI()
 
-load_dotenv()
-embedding_api_key = os.getenv('GOOGLE_MODEL_EMBEDDING_API_KEY')
-embedding_model_name = os.getenv('GOOGLE_MODEL_EMBEDDING_NAME')
+settings = Settings()
 
 @app.get("/")
 async def read_root():
@@ -30,7 +27,7 @@ async def read_root():
 @app.post("/ingest")
 async def ingest_document():
     
-    embeddings = GoogleGenerativeAIEmbeddings(model=embedding_model_name, api_key=embedding_api_key)
+    embeddings = GoogleGenerativeAIEmbeddings(model=settings.google.embedding_model_name, api_key=settings.google.embedding_api_key)
     vector = embeddings.embed_query("hello, world!")
     vector[:5]
     print(f'vectores: {vector[0]}')
