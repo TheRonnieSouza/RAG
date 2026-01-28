@@ -1,11 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field, AliasChoices, BaseModel, SecretStr
-from pathlib import Path
-
+from pydantic import BaseModel, SecretStr
 class GoogleSettings(BaseModel):
     embedding_model_name: str = "Falhou"
-    embedding_api_key: SecretStr = SecretStr("Falhou")
-    
+    embedding_api_key: SecretStr = SecretStr("Falhou")    
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=r"C:\Projetos\Python\RAG\.env",
         env_file_encoding="utf-8",
@@ -14,5 +11,6 @@ class Settings(BaseSettings):
     )
     
     google: GoogleSettings
-   
-
+    
+    def __init__(self):
+        return self
