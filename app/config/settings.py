@@ -11,6 +11,3 @@ class Settings(BaseSettings):
     )
     
     google: GoogleSettings
-    
-    def __init__(self):
-        return self
