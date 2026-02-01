@@ -35,6 +35,14 @@ if not client.collection_exists("documents"):
         collection_name="documents",
         vectors_config=models.VectorParams(size=3072, distance=models.Distance.COSINE)
     )
+    
+embeddings = GoogleGenerativeAIEmbeddings(model=settings.google.embedding_model_name, api_key=settings.google.embedding_api_key)
+
+vector_store = QdrantVectorStore(
+    client=client,
+    collection_name="documents",
+    embedding=embeddings,
+)
 
 @app.get("/")
 async def read_root():
@@ -42,15 +50,10 @@ async def read_root():
 
 @app.post("/ingest")
 async def ingest_document():
-    
-    embeddings = GoogleGenerativeAIEmbeddings(model=settings.google.embedding_model_name, api_key=settings.google.embedding_api_key)
+        
     vector = embeddings.embed_query("hello, world!")
     
-    vector_store = QdrantVectorStore(
-    client=client,
-    collection_name="documents",
-    embedding=embeddings,
-)
+    
     document_1 = Document(
     page_content="I had chocolate chip pancakes and scrambled eggs for breakfast this morning.",
     metadata={"source": "tweet"},
@@ -111,6 +114,15 @@ async def ingest_document():
     print(f'vectores: {vector[0]}')
     
     return {vector[0],vector[1],vector[2], vector[3] }
+
+@app.post("/query")
+async def query(query:str):
+    
+    docs = vector_store.similarity_search(query=query, k=4)
+    
+    return [{"page_content": d.page_content, "metadata": d.metadata} for d in docs]
+    
+    
 
 @app.post("/files")
 async def create_file(file: Annotated[bytes, File()]):
